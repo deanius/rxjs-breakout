@@ -26,16 +26,14 @@ const input$ = merge(
   }),
   fromEvent(document, 'keyup', () => KEY_STATES.ground)
 );
-const keyStateChanges = input$.pipe(distinctUntilChanged());
 
 // The Exports!
-export const keyStateSubject = new BehaviorSubject(KEY_STATES.ground);
-keyStateChanges.subscribe(keyStateSubject);
+export const keyStateChanges = input$.pipe(distinctUntilChanged());
 
-export const simKeyStateSubject = new BehaviorSubject(KEY_STATES.ground);
+export const simKeyState =
 concat(
   after(500, KEY_STATES.left),
   after(500, KEY_STATES.ground),
   after(500, KEY_STATES.right),
   after(500, KEY_STATES.ground)
-).subscribe(simKeyStateSubject);
+);
