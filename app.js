@@ -95,8 +95,6 @@ const paddle$ = ticker$.pipe(
   distinctUntilChanged()
 );
 
-// paddle$.pipe(take(600)).subscribe(x => console.log(x));
-
 const object$ = ticker$.pipe(
   withLatestFrom(paddle$),
   scan(({ ball, bricks, collisions, score }, [ticker, paddle]) => {

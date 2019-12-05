@@ -31,9 +31,20 @@ const input$ = merge(
 export const keyStateChanges = input$.pipe(distinctUntilChanged());
 
 export const simKeyState = concat(
-  after(800, KEY_STATES.ground),
-  after(500, KEY_STATES.left),
-  after(500, KEY_STATES.ground),
-  after(500, KEY_STATES.right),
-  after(500, KEY_STATES.ground)
+  after(800, KEY_STATES.left),
+  after(800, KEY_STATES.right),
+  after(1600, KEY_STATES.left),
+  after(800, KEY_STATES.ground)
+);
+
+export const simFastKeyStates = concat(
+  after(100, KEY_STATES.left),
+  after(100, KEY_STATES.right),
+  after(200, KEY_STATES.left),
+  after(100, KEY_STATES.ground),
+  after(100, KEY_STATES.right),
+  after(100, KEY_STATES.left),
+  after(100, KEY_STATES.right),
+  after(100, KEY_STATES.left),
+  after(100, KEY_STATES.right)
 );
