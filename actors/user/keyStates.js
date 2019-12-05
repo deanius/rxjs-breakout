@@ -24,20 +24,25 @@ function directionFrom(keyCode) {
   }
 }
 
+// Tranlation:
+// Every keydown (fromEvent):
+// - Cancel the waiting on the previous keyup (switchMap)
+// - Emit the direction corresponding to the keyCode (of(directionFrom))
+// - After that (concat).. Emit a 0 when a keyUp comes in for that keyCode
 const input$ = fromEvent(document, 'keydown').pipe(
   // prettier-ignore
   switchMap(({ keyCode }) => concat(
     of(directionFrom(keyCode)),
-    keyUpConcluding(keyCode)
+    wrapUpWithZeroFor(keyCode)
   ))
 );
-
-function keyUpConcluding(keyCode) {
+function wrapUpWithZeroFor(keyCode) {
   return fromEvent(document, 'keyup').pipe(
     filter(e => e.keyCode == keyCode),
     map(() => KEY_STATES.ground)
   );
 }
+
 // The Exports!
 export const keyStateChanges = input$.pipe(distinctUntilChanged());
 
