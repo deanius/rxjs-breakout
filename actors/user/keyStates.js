@@ -30,8 +30,8 @@ const input$ = merge(
 // The Exports!
 export const keyStateChanges = input$.pipe(distinctUntilChanged());
 
-export const simKeyState =
-concat(
+export const simKeyState = concat(
+  after(800, KEY_STATES.ground),
   after(500, KEY_STATES.left),
   after(500, KEY_STATES.ground),
   after(500, KEY_STATES.right),

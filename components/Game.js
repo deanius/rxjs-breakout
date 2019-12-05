@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
-import { timer, BehaviorSubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { takeUntil, withLatestFrom } from 'rxjs/operators';
 import { GameLoop } from 'rx-helper';
 
 import { keyStateChanges } from '../actors/user/keyStates';
 
 export const Game = ({ keyState = keyStateChanges }) => {
   useEffect(() => {
-    const currrentKeyState = new BehaviorSubject(0);
-    keyState.subscribe(currrentKeyState);
     const canvas = document.getElementById('stage');
     const context = canvas.getContext('2d');
 
@@ -29,9 +27,9 @@ export const Game = ({ keyState = keyStateChanges }) => {
     }
 
     const sub = new GameLoop()
-      .pipe(takeUntil(timer(3000)))
-      .subscribe(({ delta }) => {
-        const position = (currrentKeyState.value + 1) * 240;
+      .pipe(withLatestFrom(keyState), takeUntil(timer(3000)))
+      .subscribe(([{ delta }, direction]) => {
+        const position = (direction + 1) * 240;
         drawPaddle(position);
       });
 
