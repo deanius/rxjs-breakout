@@ -1,5 +1,5 @@
-import { concat, fromEvent, merge, BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { concat, fromEvent, of } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, filter } from 'rxjs/operators';
 import { after } from 'rx-helper';
 
 const PADDLE_KEYS = {
@@ -13,20 +13,31 @@ const KEY_STATES = {
   ground: 0
 };
 
-const input$ = merge(
-  fromEvent(document, 'keydown', event => {
-    switch (event.keyCode) {
-      case PADDLE_KEYS.left:
-        return KEY_STATES.left;
-      case PADDLE_KEYS.right:
-        return KEY_STATES.right;
-      default:
-        return KEY_STATES.ground;
-    }
-  }),
-  fromEvent(document, 'keyup', () => KEY_STATES.ground)
+function directionFrom(keyCode) {
+  switch (keyCode) {
+    case PADDLE_KEYS.left:
+      return KEY_STATES.left;
+    case PADDLE_KEYS.right:
+      return KEY_STATES.right;
+    default:
+      return KEY_STATES.ground;
+  }
+}
+
+const input$ = fromEvent(document, 'keydown').pipe(
+  // prettier-ignore
+  switchMap(({ keyCode }) => concat(
+    of(directionFrom(keyCode)),
+    keyUpConcluding(keyCode)
+  ))
 );
 
+function keyUpConcluding(keyCode) {
+  return fromEvent(document, 'keyup').pipe(
+    filter(e => e.keyCode == keyCode),
+    map(() => KEY_STATES.ground)
+  );
+}
 // The Exports!
 export const keyStateChanges = input$.pipe(distinctUntilChanged());
 
