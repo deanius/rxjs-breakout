@@ -8,7 +8,8 @@ const BRICK_COLUMNS = 7;
 const BRICK_HEIGHT = 20;
 const BRICK_GAP = 3;
 
-const INITIAL_OBJECTS = {
+export const INITIAL_WORLD = {
+  paddle: { x: CANVAS.width / 2 },
   ball: {
     position: {
       x: CANVAS.width / 2,

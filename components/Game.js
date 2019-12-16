@@ -4,16 +4,13 @@ import { withLatestFrom, scan } from 'rxjs/operators';
 import { GameLoop } from 'rx-helper';
 
 import { keyStateChanges } from '../actors/user/keyStates';
-import { CANVAS } from './board';
+import { CANVAS, INITIAL_WORLD } from './board';
 
-const initialWorld = {
-  paddle: { x: CANVAS.width / 2 }
-};
 export const Game = ({ keyState = keyStateChanges }) => {
   useEffect(() => {
     const canvas = document.getElementById('stage');
     const context = canvas.getContext('2d');
-    drawWorld(initialWorld, context, canvas);
+    drawWorld(INITIAL_WORLD, context, canvas);
     const sub = new GameLoop()
       .pipe(
         // For some reason GameLoop doesn't give us true deltas, so calculate them
@@ -25,7 +22,7 @@ export const Game = ({ keyState = keyStateChanges }) => {
         scan(
           (world, [tick, keyState, canvas]) =>
             worldUpdater(world, { tick, keyState, canvas }),
-          initialWorld
+          INITIAL_WORLD
         )
       )
       .subscribe(world => {
@@ -44,8 +41,7 @@ export const Game = ({ keyState = keyStateChanges }) => {
   );
 };
 
-//////
-
+////// WORLD UPDATING
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 const PADDLE_SPEED = 240;
@@ -67,8 +63,7 @@ function updatePaddle(paddle, direction, delta, canvas) {
   );
 }
 
-///////
-
+/////// CANVAS RENDERING ////////
 function drawWorld(world, context) {
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
   drawPaddle(world.paddle.x, context);
