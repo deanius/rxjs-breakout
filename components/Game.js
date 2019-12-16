@@ -4,9 +4,10 @@ import { withLatestFrom, scan } from 'rxjs/operators';
 import { GameLoop } from 'rx-helper';
 
 import { keyStateChanges } from '../actors/user/keyStates';
+import { CANVAS } from './board';
 
 const initialWorld = {
-  paddle: { x: 240 }
+  paddle: { x: CANVAS.width / 2 }
 };
 export const Game = ({ keyState = keyStateChanges }) => {
   useEffect(() => {
@@ -36,8 +37,8 @@ export const Game = ({ keyState = keyStateChanges }) => {
   return (
     <canvas
       id="stage"
-      width="480"
-      height="320"
+      width={CANVAS.width}
+      height={CANVAS.height}
       style={{ backgroundColor: '#eee' }}
     ></canvas>
   );
