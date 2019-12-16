@@ -6,7 +6,7 @@ import { GameLoop } from 'rx-helper';
 import { keyStateChanges } from '../actors/user/keyStates';
 import { CANVAS, INITIAL_WORLD } from './board';
 
-export const Game = ({ keyState = keyStateChanges }) => {
+export const Game = ({ children, keyState = keyStateChanges }) => {
   useEffect(() => {
     const canvas = document.getElementById('stage');
     const context = canvas.getContext('2d');
@@ -32,12 +32,15 @@ export const Game = ({ keyState = keyStateChanges }) => {
     return () => sub.unsubscribe();
   }, []);
   return (
-    <canvas
-      id="stage"
-      width={CANVAS.width}
-      height={CANVAS.height}
-      style={{ backgroundColor: '#eee' }}
-    ></canvas>
+    <>
+      <canvas
+        id="stage"
+        width={CANVAS.width}
+        height={CANVAS.height}
+        style={{ backgroundColor: '#eee' }}
+      ></canvas>
+      {children}
+    </>
   );
 };
 
