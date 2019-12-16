@@ -47,12 +47,15 @@ const PADDLE_HEIGHT = 20;
 const PADDLE_SPEED = 240;
 
 const BALL_RADIUS = 10;
+const BALL_SPEED = 60 / 1000;
 
 function worldUpdater(world, { tick, keyState, canvas }) {
   const { delta } = tick;
   const direction = keyState;
+  const { paddle, ball } = world;
 
-  updatePaddle(world.paddle, direction, delta, canvas);
+  updatePaddle(paddle, direction, delta, canvas);
+  updateBall(ball, delta);
   return world;
 }
 
@@ -63,6 +66,18 @@ function updatePaddle(paddle, direction, delta, canvas) {
     Math.min(newX, canvas.width - PADDLE_WIDTH / 2),
     PADDLE_WIDTH / 2
   );
+}
+
+function updateBall(ball, delta = 0) {
+  ball.position.x = ball.position.x + ball.direction.x * delta * BALL_SPEED;
+  ball.position.y = ball.position.y + ball.direction.y * delta * BALL_SPEED;
+
+  if (
+    ball.position.x < BALL_RADIUS ||
+    ball.position.x > CANVAS.width - BALL_RADIUS
+  ) {
+    ball.direction.x = -ball.direction.x;
+  }
 }
 
 /////// CANVAS RENDERING ////////
