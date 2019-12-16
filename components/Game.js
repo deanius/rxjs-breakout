@@ -46,6 +46,8 @@ const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 const PADDLE_SPEED = 240;
 
+const BALL_RADIUS = 10;
+
 function worldUpdater(world, { tick, keyState, canvas }) {
   const { delta } = tick;
   const direction = keyState;
@@ -67,6 +69,13 @@ function updatePaddle(paddle, direction, delta, canvas) {
 function drawWorld(world, context) {
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
   drawPaddle(world.paddle.x, context);
+  drawBall(world.ball, context);
+}
+function drawBall(ball, context) {
+  context.beginPath();
+  context.arc(ball.position.x, ball.position.y, BALL_RADIUS, 0, Math.PI * 2);
+  context.fill();
+  context.closePath();
 }
 
 function drawPaddle(position, context) {
