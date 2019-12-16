@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "RxJS Breakout Implementation",
   "scripts": {
-    "start": "budo app.js:index.js --live --open -- -t [ babelify --presets [ es2015 ] ]",
+    "start": "npm run storybook",
+    "start:orig": "budo app.js:index.js --live --open -- -t [ babelify --presets [ es2015 ] ]",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
