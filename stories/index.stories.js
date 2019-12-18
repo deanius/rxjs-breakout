@@ -22,5 +22,5 @@ export const playableCanvas = () => {
   }).subscribe();
   return game;
 };
-export const simulatedMovement = () => <Game keyState={simKeyState} />;
-export const fastMovement = () => <Game keyState={simFastKeyStates} />;
+export const simulatedMovement = () => <Game direction$={simKeyState} />;
+export const fastMovement = () => <Game direction$={simFastKeyStates} />;

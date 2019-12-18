@@ -1,6 +1,12 @@
 import { concat, fromEvent, of } from 'rxjs';
-import { distinctUntilChanged, map, switchMap, filter } from 'rxjs/operators';
-import { after } from 'rx-helper';
+import {
+  distinctUntilChanged,
+  map,
+  switchMap,
+  filter,
+  tap
+} from 'rxjs/operators';
+import { after, trigger, on } from 'rx-helper';
 
 const PADDLE_KEYS = {
   left: 37,
@@ -44,7 +50,12 @@ function wrapUpWithZeroFor(keyCode) {
 }
 
 // The Exports!
-export const keyStateChanges = input$.pipe(distinctUntilChanged());
+export const directionChanges = input$.pipe(
+  distinctUntilChanged(),
+  tap(dir => trigger('user/direction', dir))
+);
+
+on('user/direction', ({ type, payload }) => console.log(type, payload));
 
 export const simKeyState = concat(
   after(800, KEY_STATES.left),

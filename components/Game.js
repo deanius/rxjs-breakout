@@ -3,14 +3,14 @@ import { of } from 'rxjs';
 import { withLatestFrom, scan } from 'rxjs/operators';
 import { GameLoop } from 'rx-helper';
 
-import { keyStateChanges } from '../actors/user/keyStates';
+import { directionChanges } from '../actors/user/keyStates';
 import { CANVAS, INITIAL_WORLD } from './board';
 
-export const Game = ({ children, keyState = keyStateChanges }) => {
+export const Game = ({ children, direction$ = directionChanges }) => {
   useEffect(() => {
     const canvas = document.getElementById('stage');
     const context = canvas.getContext('2d');
-    drawWorld(INITIAL_WORLD, context, canvas);
+    drawWorld(INITIAL_WORLD, context);
     const sub = new GameLoop()
       .pipe(
         // For some reason GameLoop doesn't give us true deltas, so calculate them
@@ -18,10 +18,10 @@ export const Game = ({ children, keyState = keyStateChanges }) => {
           elapsed: current.delta,
           delta: current.delta - previous.elapsed
         })),
-        withLatestFrom(keyState, of(canvas)),
+        withLatestFrom(direction$, of(canvas)),
         scan(
-          (world, [tick, keyState, canvas]) =>
-            worldUpdater(world, { tick, keyState, canvas }),
+          (world, [tick, direction, canvas]) =>
+            worldUpdater(world, { tick, direction, canvas }),
           INITIAL_WORLD
         )
       )
@@ -52,9 +52,8 @@ const PADDLE_SPEED = 240;
 const BALL_RADIUS = 10;
 const BALL_SPEED = 60 / 1000;
 
-function worldUpdater(world, { tick, keyState, canvas }) {
+function worldUpdater(world, { tick, direction, canvas }) {
   const { delta } = tick;
-  const direction = keyState;
   const { paddle, ball } = world;
 
   updatePaddle(paddle, direction, delta, canvas);
